@@ -1,6 +1,6 @@
 package com.nibado.example.springaop.todo;
 
-import com.nibado.example.springaop.aspects.Timed;
+import com.nibado.example.springaop.aspects.Restrict;
 import com.nibado.example.springaop.todo.domain.TodoList;
 import com.nibado.example.springaop.todo.dto.AllTodos;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,6 @@ public class TodoController {
     }
 
     @RequestMapping(value = "/me", method = RequestMethod.GET, produces = "application/json")
-    @Timed
     public Callable<AllTodos> allTodos(@RequestHeader("user-id") final UUID userId) {
         log.info("GET all todo's for user {}", userId);
         return () -> new AllTodos(repository.get(userId));
@@ -62,6 +61,17 @@ public class TodoController {
     public Callable<ResponseEntity<Void>> createTodoList(@RequestHeader("user-id") final UUID userId, @RequestBody TodoList todoList) {
         return () -> {
             repository.add(userId, todoList);
+
+            return ResponseEntity.accepted().build();
+        };
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.DELETE)
+    @Restrict
+    public Callable<ResponseEntity<?>> deleteAllTodos() {
+        log.info("DELETE all todo's");
+        return () -> {
+            repository.deleteAll();
 
             return ResponseEntity.accepted().build();
         };

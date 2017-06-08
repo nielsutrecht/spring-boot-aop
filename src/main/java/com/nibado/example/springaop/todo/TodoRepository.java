@@ -44,4 +44,9 @@ public class TodoRepository {
 
         list.removeIf(l -> l.getName().equals(todoList));
     }
+
+    @Timed
+    public void deleteAll() {
+        db.clear();
+    }
 }

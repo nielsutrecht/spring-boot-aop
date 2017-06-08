@@ -1,5 +1,6 @@
 package com.nibado.example.springaop.config;
 
+import com.nibado.example.springaop.aspects.ForbiddenException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,14 @@ public class ExceptionHandlers {
     public ErrorResponse handle(final IllegalArgumentException ex) {
         log.error("Missing parameter", ex);
         return new ErrorResponse("ILLEGAL_ARGUMENT", ex.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN    )
+    @ResponseBody
+    public ErrorResponse handle(final ForbiddenException ex) {
+        log.error("Missing parameter", ex);
+        return new ErrorResponse("FORBIDDEN_ACTION", ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

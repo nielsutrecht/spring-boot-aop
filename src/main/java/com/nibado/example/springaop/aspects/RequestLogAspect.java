@@ -15,8 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class RequestLogAspect {
     @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && execution(public * *(..))")
-    public Object time(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    public Object log(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
 
         Object value;
 
@@ -25,7 +27,12 @@ public class RequestLogAspect {
         } catch (Throwable throwable) {
             throw throwable;
         } finally {
-            log.info("{} {} from {}", request.getMethod(), request.getRequestURI(), request.getRemoteAddr(), request.getHeader("user-id"));
+            log.info(
+                    "{} {} from {}",
+                    request.getMethod(),
+                    request.getRequestURI(),
+                    request.getRemoteAddr(),
+                    request.getHeader("user-id"));
         }
 
         return value;

@@ -23,7 +23,11 @@ public class TimeLogAspect {
         } finally {
             long duration = System.currentTimeMillis() - start;
 
-            log.info("{}.{} took {} ms", proceedingJoinPoint.getSignature().getDeclaringTypeName(), proceedingJoinPoint.getSignature().getName(), duration);
+            log.info(
+                    "{}.{} took {} ms",
+                    proceedingJoinPoint.getSignature().getDeclaringType().getSimpleName(),
+                    proceedingJoinPoint.getSignature().getName(),
+                    duration);
         }
 
         return value;
